@@ -32,7 +32,7 @@ spec:
             valueFrom:
               configMapKeyRef:
                 key: hostname
-                name: eureka-cm
+                name: mysql-cm
 
 
 
