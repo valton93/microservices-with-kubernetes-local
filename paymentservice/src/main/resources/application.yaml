@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: PAYMENT-SERVICE
+  
+  config:
+    import: configserver:${CONFIG_SERVER:http://localhost:8085}
+    
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/paymentdb
+    username: root
+    password: root
+    driverClassName: com.mysql.cj.jdbc.Driver
+    
+  jpa:
+   hibernate:
+    ddl-auto: update
+    
+server:
+  port: 8086
+  
+
+       
+
