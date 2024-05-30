@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service-app
+spec:
+  selector:
+    matchLabels:
+      app: order-service-app
+  template:
+    metadata:
+      labels:
+        app: order-service-app
+    spec:
+      containers:
+      - name: orders-service-app
+        image: valton93/orderservice
+        ports:
+        - containerPort: 8080
+        env:
+          - name: CONFIG_SERVER
+            valueFrom:
+              configMapKeyRef:
+                key: config-url
+                name: config-cm
+                
+          - name: EUREKA_SERVER_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                key: eureka-service-url
+                name: eureka-cm
+          - name: DB-HOST
+            valueFrom:
+              configMapKeyRef:
+                key: hostname
+                name: eureka-cm
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service-svc
+spec:
+  selector:
+    app: order-service-app
+  ports:
+  - port: 80
+    targetPort: 8080
+

@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service-app
+spec:
+  selector:
+    matchLabels:
+      app: product-service-app
+  template:
+    metadata:
+      labels:
+        app: product-service-app
+    spec:
+      containers:
+      - name: product-service-app
+        image: valton93/productservice
+        ports:
+        - containerPort: 8081
+        env:
+          - name: CONFIG_SERVER
+            valueFrom:
+              configMapKeyRef:
+                key: config-url
+                name: config-cm
+                
+          - name: EUREKA_SERVER_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                key: eureka-service-url
+                name: eureka-cm
+          - name: DB-HOST
+            valueFrom:
+              configMapKeyRef:
+                key: hostname
+                name: eureka-cm
+
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-service-svc
+spec:
+  selector:
+    app: product-service-app
+  ports:
+  - port: 80
+    targetPort: 8081
+

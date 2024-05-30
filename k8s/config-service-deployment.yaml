@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-service-app
+spec:
+  selector:
+    matchLabels:
+      app: config-service-app
+  template:
+    metadata:
+      labels:
+        app: config-service-app
+    spec:
+      containers:
+      - name: config-service-app
+        image: valton93/configservice
+        ports:
+        - containerPort: 8085
+        env:
+          - name: EUREKA_SERVER_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                key: eureka-service-url
+                name: eureka-cm
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: config-service-svc
+spec:
+  selector:
+    app: config-service-app
+  ports:
+  - port: 80
+    targetPort: 8085
+
